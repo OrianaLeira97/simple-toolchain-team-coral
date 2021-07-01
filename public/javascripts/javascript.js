@@ -114,12 +114,20 @@ function clearPayloadDiv()
 }
 
 
-function populatePayloadDiv( payload )
+function populateResultsDiv( result )
 {
-    document.getElementById( 'payload_spinner' ).style.display = 'none';
-    document.getElementById( 'payload_pre' ).innerHTML = JSON.stringify( payload, null, 3 );
-}
+   
+    result = JSON.parse(result)
+    if (result && result.predictions && result.predictions.length) {
+        console.log(result.predictions[0])
+        result = `${result.predictions[0].values[0][0]}`
+    } else {
+        result = "Invalid results from deployed model."
+    }
 
+    document.getElementById("price-output").value = result;
+    console.log(result)
+}
 
 function clearResultsDiv()
 {
@@ -130,10 +138,18 @@ function clearResultsDiv()
 
 function populateResultsDiv( result )
 {
-    document.getElementById( 'results_spinner' ).style.display = 'none';
-    document.getElementById( 'results_pre' ).innerHTML = result;
-}
+   
+    result = JSON.parse(result)
+    if (result && result.predictions && result.predictions.length) {
+        console.log(result.predictions[0])
+        result = `${result.predictions[0].values[0][0]}`
+    } else {
+        result = "Invalid results from deployed model."
+    }
 
+    document.getElementById("price-output").value = result;
+    console.log(result)
+}
 
 function resetGlobalVars()
 {
@@ -419,7 +435,7 @@ function processresultHandler( result )
     {
         var err_str = JSON.stringify( result, null, 3 );
         populateResultsDiv( err_str );
-        alert( err_str );
+       // alert( err_str );
     }
 
 }
