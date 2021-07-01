@@ -1,5 +1,5 @@
 var payload = {
-    "zipcode":"",
+    "zipcode":null,
     "houseage": null,
     "distance":null,
     "stores":null,
@@ -33,17 +33,17 @@ function onSelect()
  
 function onEstimate(){
    /*  const values = Object.payload.map(field => field); */
-    const payload_scoring = {"input data":
+    const payload_scoring = {"input_data":
             [{"fields":[Object.keys(payload)],
             "values":[Object.values(payload)]}]  
     }
     console.log(payload_scoring)
 
-    //const res = sendPayloadToDeployment(payload_scoring)
+    const result = JSON.stringify(sendPayloadToDeployment(payload_scoring))
 
-    //console.log(res)
-    document.getElementById("price-output").value = Math.round(Math.random()*1000000,2);
-    //return res
+    console.log(result)
+    //document.getElementById("price-output").value = Math.round(Math.random()*1000000,2);
+    return result
 }
 
 
