@@ -1,86 +1,137 @@
 <!DOCTYPE html>
 <html>
-
+  
   <head>
-    <link href="stylesheets/style.css" rel="stylesheet">
-    <script type="text/javascript" src="javascripts/javascript.js"></script>
+    <!-- <link href="stylesheets/style.css" rel="stylesheet" /> -->
+    <link
+      href="https://unpkg.com/carbon-components/css/carbon-components.min.css"
+      rel="stylesheet"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.js"
+      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+      crossorigin="anonymous"
+    ></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <link href="stylesheets/style.css" rel="stylesheet"/>
   </head>
 
   <body>
-
-    <script>
-
-      //var socket = io.connect( 'https://app-name.mybluemix.net/' );
-      var socket = io.connect();
-
-      socket.on( 'processresult', processresultHandler );
-
-      function sendPayloadToDeployment( payload )
-      {
-          document.getElementById( 'results_spinner' ).style.display = 'block';
-          
-          var deployment_type = document.querySelector( 'input[name="deployment_type"]:checked' ).value;
-
-          socket.emit( deployment_type, payload );
-      }
-
-    </script>
-
-    <div id='instructions_div'>
+    <div id='instructions_div' class="text">
       <h3>Instructions</h3>
-      <ol>
-        <li>Draw a single digit ( 0 - 9 ) in the box using your mouse</li>
-        <li>Choose whether to prepare the image data to be sent to a model deployment or to a function deployment</li>
-        <li>Then click <b>Analyze</b></li>
-      </ol>
-    </div>
+        <p>Fill the following fields to estimate your dream house's price </p>
+    </div>   
+    <div class="bx--grid"></div>
+      <div class="bx--row">
+        <div class="bx--col">
+  
+          <div class="container">
 
-    <div id='canvas_div'>
-      <h4>Canvas</h4>
-      <canvas id='drawing_box'
-              onmousedown = 'start_drawing(event);' 
-              onmouseup   = 'stop_drawing(event);'
-              onmouseout  = 'stop_drawing(event);'
-              onmousemove = 'draw_line(event);'
-              height="200",
-              width="200"
-              title="Draw a single digit ( 0 - 9 ) here using your mouse">
-      </canvas>
-    </div>
 
-    <div id="radio_btn_div">
-      <input type="radio" class="radio_btn" name="deployment_type" value="sendtomodel" checked title="Send preprocessed data to a model deployment" onchange='revertImage();'>Model deployment<br/>
-    </div>
-    <button id='submit_button' onclick='submit_drawing();'   title='Submit current drawing for analysis'>Analyze</button>
-    <button id='clear_button'  onclick='clear_everything();' title='Clear drawing and results'>Clear</button>
+              <label class="bx--label">Zip Code</label>
+              <div class="bx--form-item">
+                <div class="bx--select">
+                  <select name="select" id="zipcode" onchange="onSelect(event)" class="bx--select-input">
+                    <option class="bx--select-option" disabled selected hidden>Pick an option</option>
+                    <option class="bx--select-option" value="27601">27601</option>
+                    <option class="bx--select-option" value="27602">27602</option>
+                    <option class="bx--select-option" value="27603">27603</option>
+                    <option class="bx--select-option" value="27604">27604</option>
+                    <option class="bx--select-option" value="27605">27605</option>
+                    <option class="bx--select-option" value="27606">27606</option>
+                    <option class="bx--select-option" value="27607">27607</option>
+                    <option class="bx--select-option" value="27608">27608</option>
+                    <option class="bx--select-option" value="27609">27609</option>
+                    <option class="bx--select-option" value="276010">276010</option>
+                    <option class="bx--select-option" value="276011">276011</option>
+                  </select>
+                </div>
+              </div>
+              
+        
 
-    <div id='payload_div'>
-    <h4>Generated payload</h4>
-    <pre id='payload_pre'     class='results_pre' ></pre>
-    <div id='payload_spinner' class='spinner'></div>
-    </div>
+            <div class="bx--form-item bx--text-input-wrapper">
+              <label for="text-input-3" class="bx--label">House Age</label>
+              <div class="bx--text-input__field-wrapper">
+                <input
+                  onchange='onChange(event)'
+                  id="houseage"
+                  type="text"
+                  class="bx--text-input"
+                  placeholder="Null"
+                />
+              </div>
+            </div>
 
-    <div id='results_div'>
-    <h4>Returned classification</h4>
-    <pre id='results_pre'     class='results_pre'></pre>
-    <div id='results_spinner' class='spinner'></div>
-    </div>
+            <div class="bx--form-item bx--text-input-wrapper">
+              <label for="text-input-3" class="bx--label">Distance to Mass Transit</label>
+              <div class="bx--text-input__field-wrapper">
+                <input
+                  onchange='onChange(event)'
+                  id="distance"
+                  type="text"
+                  class="bx--text-input"
+                  placeholder="Null"
+                />
+              </div>
+            </div>
 
-    <div id='explain_div'>
-    <p>Watch as the image data from the canvas (RGBA format) is preprocessed before being sent in the payload to the model or function.</p>
-    <p>The preprocessing is as close as possible to how the MNIST training data was prepared:</p>
-    <ol>
-    <li>A rectangular bounding box is created around the digit (the red box is for illustration only, and is not part of the processing)</li>
-    <li>A square bounding box is created, with the digit centered in the box<p><i>If "Function deployment" is checked, processing stops here and this canvas data is sent to the function deployment.</i></p></li>
-    <li>The content in the square box is resized to 28 pixels by 28 pixels</li>
-    <li>The image is converted to greyscale by setting RGB values to zero, leaving only the Alpha value remaining</li>
-    <li>The Alpha values are collected in a 1 by 784 array</li>
-    <li>Values in the array are normalized (divided by 255) to values between 0 and 1<p><i>If "Model deployment" is checked, this array is set to the model deployment.</i></p></li>
-    </ol>
-    </div>
+            <div class="bx--form-item bx--text-input-wrapper">
+              <label for="text-input-3" class="bx--label">Numbers of Stores Nearby</label>
+              <div class="bx--text-input__field-wrapper">
+                <input
+                  onchange='onChange(event)'
+                  id="stores"
+                  type="text"
+                  class="bx--text-input"
+                  placeholder="Null"
+                />
+              </div>
+            </div>
 
+            <div class="bx--form-item bx--text-input-wrapper">
+              <label for="text-input-3" class="bx--label">Square Footage</label>
+              <div class="bx--text-input__field-wrapper">
+                <input
+                  onchange='onChange(event)'
+                  id="sqft"
+                  type="text"
+                  class="bx--text-input"
+                  placeholder="Null"
+                />
+              </div>
+            </div>
+
+          
+           
+          </div>
+        </div> 
+        <div class="bx--col">
+          <button id="btn-form" class="bx--btn bx--btn--primary" type="button" onclick="onEstimate()">
+            Estimate Price ($USD)
+          </button>
+
+          <div class="bx--form-item">
+            <input id="price-output" type="text" class="bx--text-input" placeholder="0.00" readonly>
+          </div>
+        </div>
+      </div>
+    </div>    
+
+    <!-- Put HTML snippets of components here... -->
+    <script src="https://unpkg.com/carbon-components/scripts/carbon-components.min.js"></script>
+    <script type="text/javascript" src="javascripts/javascript.js"></script>
+    <script>
+      var socket = io.connect();
+      socket.on("processresult", processresultHandler);
+      function sendPayloadToDeployment(payload) {
+        /*  document.getElementById("results_spinner").style.display = "block"; */
+         /* var deployment_type = document.querySelector(
+          'input[name="deployment_type"]:checked'
+        ).value;  */
+        socket.emit("sendtomodel", payload);
+      }
+    </script>
   </body>
-
 </html>
 

@@ -1,17 +1,61 @@
-var g_mouse_is_down = false; // Used to draw the image on the canvas
-var g_prev_pixel_X  = -1;    //
-var g_prev_pixel_Y  = -1;    //
-var g_line_width = 25;       //
+var payload = {
+    "zipcode":"",
+    "houseage": null,
+    "distance":null,
+    "stores":null,
+    "sqft":null,
+}
 
-var g_min_X = 200;           // Tracking the minimum/maximum mouse position
-var g_min_Y = 200;           // on the canvas makes it simple to create a 
-var g_max_X = 0;             // bounding box around the drawn digit
-var g_max_Y = 0;             //
 
-var g_saved_digit = null;    // After an image has been sent to a deployment
-                             // if a different deployment type is selected,
-                             // reload the original drawn digit to resend to
-                             // the other deployment type
+
+function onChange()
+{
+    payload.houseage = parseFloat(document.getElementById('houseage').value);
+    payload.distance = parseFloat(document.getElementById('distance').value)
+    payload.stores = parseFloat(document.getElementById('stores').value);
+    payload.sqft = parseFloat(document.getElementById('sqft').value);
+
+    console.log(payload)
+
+}
+
+
+function onSelect()
+{
+    let e = document.getElementById("zipcode");
+    payload.zipcode = e.options[e.selectedIndex].value;
+    console.log(payload)
+
+}
+
+
+
+ 
+function onEstimate(){
+   /*  const values = Object.payload.map(field => field); */
+    const payload_scoring = {"input data":
+            [{"fields":[Object.keys(payload)],
+            "values":[Object.values(payload)]}]  
+    }
+    console.log(payload_scoring)
+
+    //const res = sendPayloadToDeployment(payload_scoring)
+
+    //console.log(res)
+    document.getElementById("price-output").value = Math.round(Math.random()*1000000,2);
+    //return res
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 function start_drawing(e)
@@ -379,3 +423,4 @@ function processresultHandler( result )
     }
 
 }
+
