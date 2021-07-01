@@ -6,6 +6,20 @@ var payload = {
     "sqft":null,
 }
 
+const codes= [{"zip_code":27601,"house_value":252216.3249999999},
+{"zip_code":27602,"house_value":259411.92},
+{"zip_code":27603,"house_value":229916.9441860465},
+{"zip_code":27604,"house_value":239927.2297297298},
+{"zip_code":27605,"house_value":287501.5046511627},
+{"zip_code":27606,"house_value":269187.943902439},
+{"zip_code":27607,"house_value":253678.3},
+{"zip_code":27608,"house_value":236132.6903225807},
+{"zip_code":27609,"house_value":239875.305882353},
+{"zip_code":27610,"house_value":247127.6225806452},
+{"zip_code":27611,"house_value":273820.0371428571}]
+
+
+
 
 
 function onChange()
@@ -42,6 +56,18 @@ function onEstimate(){
     const result = JSON.stringify(sendPayloadToDeployment(payload_scoring))
 
     console.log(result)
+
+    let average_zipcode = {}
+    let average = codes.forEach(code => {
+        average_zipcode[code.zip_code] = code.house_value
+    })
+    console.log(average_zipcode)
+   
+    document.getElementById("average-price").value = average_zipcode[payload.zipcode]
+ 
+
+    
+
     //document.getElementById("price-output").value = Math.round(Math.random()*1000000,2);
     return result
 }
@@ -135,21 +161,6 @@ function clearResultsDiv()
     document.getElementById( 'results_spinner' ).style.display = "none";
 }
 
-
-function populateResultsDiv( result )
-{
-   
-    result = JSON.parse(result)
-    if (result && result.predictions && result.predictions.length) {
-        console.log(result.predictions[0])
-        result = `${result.predictions[0].values[0][0]}`
-    } else {
-        result = "Invalid results from deployed model."
-    }
-
-    document.getElementById("price-output").value = result;
-    console.log(result)
-}
 
 function resetGlobalVars()
 {
